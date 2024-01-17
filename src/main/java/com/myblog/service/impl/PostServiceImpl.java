@@ -7,6 +7,9 @@ import com.myblog.repository.PostRepository;
 import com.myblog.service.PostService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -18,16 +21,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto createPost(PostDto postDto){
-        Post post = new Post();
-        post.setTitle(postDto.getTitle());
-        post.setDescription(postDto.getDescription());
-        post.setContent(postDto.getContent());
+        Post post = mapToPostEntity(postDto);
         Post savePost = postRepository.save(post);
-
-        PostDto dto = new PostDto();
-        dto.setTitle(savePost.getTitle());
-        dto.setDescription(savePost.getDescription());
-        dto.setContent(savePost.getContent());
+        PostDto dto = mapToDto(savePost);
         return dto;
     }
 
@@ -42,5 +38,29 @@ public class PostServiceImpl implements PostService {
         dto.setDescription(post.getDescription());
         dto.setContent(post.getContent());
         return dto;
+    }
+
+    @Override
+    public List<PostDto> getAllPosts() {
+        List<Post> posts = postRepository.findAll();
+        List<PostDto> postDtos = posts.stream().map(post -> mapToDto(post)).collect(Collectors.toList());
+        return postDtos;
+    }
+
+    public PostDto mapToDto(Post post){
+        PostDto dto = new PostDto();
+        dto.setId(post.getId());
+        dto.setTitle(post.getTitle());
+        dto.setDescription(post.getDescription());
+        dto.setContent(post.getContent());
+        return dto;
+    }
+
+    public Post mapToPostEntity(PostDto postDto){
+        Post post = new Post();
+        post.setTitle(postDto.getTitle());
+        post.setDescription(postDto.getDescription());
+        post.setContent(postDto.getContent());
+        return post;
     }
 }
