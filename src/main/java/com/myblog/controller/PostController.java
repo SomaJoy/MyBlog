@@ -31,9 +31,13 @@ public class PostController {
         return  new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    //http://localhost:8080/api/posts?pageNo=1&pageSize=3
     @GetMapping
-    public List<PostDto> getAllPosts(){
-        List<PostDto> postDtos = postService.getAllPosts();
+    public List<PostDto> getAllPosts(
+            @RequestParam(name = "pageNo", required = false, defaultValue = "0") int pageNo,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "3") int pageSize
+    ){
+        List<PostDto> postDtos = postService.getAllPosts(pageNo, pageSize);
         return postDtos;
     }
 }
