@@ -24,14 +24,13 @@ public class PostController {
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
-    //http://localhost:8080/api/posts?id=1
     @GetMapping("/id")
     public ResponseEntity<PostDto> getPostById(@RequestParam long id){
         PostDto dto = postService.getPostById(id);
         return  new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    //http://localhost:8080/api/posts?pageNo=1&pageSize=3&sortBy=id
+
     @GetMapping
     public List<PostDto> getAllPosts(
             @RequestParam(name = "pageNo", required = false, defaultValue = "0") int pageNo,
