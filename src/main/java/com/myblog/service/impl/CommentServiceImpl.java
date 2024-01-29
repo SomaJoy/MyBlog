@@ -7,6 +7,7 @@ import com.myblog.payload.CommentDto;
 import com.myblog.repository.CommentRepository;
 import com.myblog.repository.PostRepository;
 import com.myblog.service.CommentService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,10 +15,12 @@ public class CommentServiceImpl implements CommentService {
 
     private PostRepository postRepository;
     private CommentRepository commentRepository;
+    private ModelMapper  modelMapper;
 
-    public CommentServiceImpl(PostRepository postRepository, CommentRepository commentRepository) {
+    public CommentServiceImpl(PostRepository postRepository, CommentRepository commentRepository, ModelMapper modelMapper) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
+        this.modelMapper = modelMapper;
     }
 
 
@@ -38,4 +41,27 @@ public class CommentServiceImpl implements CommentService {
         dto.setText(saveComment.getText());
         return dto;
     }
+
+    @Override
+    public void deleteComment(long id) {
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Comment does not exixt with id - "+id)
+        );
+        commentRepository.deleteById(id);
+    }
+
+    @Override
+    public CommentDto updateComment(long id, CommentDto commentDto) {
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Comment not found with id - "+id)
+        );
+        //Comment updated = modelMapper.map(commentDto, Comment.class);
+        comment.setText(commentDto.getText());
+        comment.setEmail(commentDto.getEmail());
+        Comment updatedComment = commentRepository.save(comment);
+        CommentDto dto = new CommentDto();
+        dto = modelMapper.map(updatedComment, CommentDto.class);
+        return dto;
+    }
+
 }
