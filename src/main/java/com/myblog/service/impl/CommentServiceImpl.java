@@ -29,16 +29,16 @@ public class CommentServiceImpl implements CommentService {
         Post post = postRepository.findById(postId).orElseThrow(
                 ()->new ResourceNotFoundException("Post not found with id - "+postId)
         );
-        Comment comment = new Comment();
-        comment.setEmail(commentDto.getEmail());
-        comment.setText(commentDto.getText());
-        comment.setPost(post);
+        Comment comment = mapToEntity(commentDto);
+//        comment.setEmail(commentDto.getEmail());
+//        comment.setText(commentDto.getText());
+//        comment.setPost(post);
         Comment saveComment = commentRepository.save(comment);
 
-        CommentDto dto = new CommentDto();
-        dto.setId(saveComment.getId());
-        dto.setEmail(saveComment.getEmail());
-        dto.setText(saveComment.getText());
+        CommentDto dto = mapToDto(saveComment);
+//        dto.setId(saveComment.getId());
+//        dto.setEmail(saveComment.getEmail());
+//        dto.setText(saveComment.getText());
         return dto;
     }
 

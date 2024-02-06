@@ -1,17 +1,16 @@
 package com.myblog;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Test {
     public static void main(String[] args) {
-        new Test().test().test1();
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        System.out.println(passwordEncoder.encode("soma"));
     }
-    public Test test(){
-        return new Test();
-    }
-    public void test1(){
-        System.out.println(101);
-    }
+
 }
